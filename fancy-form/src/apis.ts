@@ -1,5 +1,5 @@
 import { multiply, divide } from "./bignumber.utils";
-import { priceMapper, DELAY } from "./constants";
+import { priceMapper, DELAY, updatedTimeMapper } from "./constants";
 
 export const fetchExchange = ({
   amount,
@@ -17,10 +17,25 @@ export const fetchExchange = ({
           amount.toString(),
           divide(priceMapper[from].toString(), priceMapper[to].toString())
         );
+        const fromPerTo = divide(
+          priceMapper[from].toString(),
+          priceMapper[to].toString()
+        );
+        const toPerFrom = divide(
+          priceMapper[to].toString(),
+          priceMapper[from].toString()
+        );
+        const updatedTime = updatedTimeMapper[from];
         resolve({
           status: 200,
           data: {
             exchangedAmount,
+            fromPerTo,
+            toPerFrom,
+            updatedTime,
+            from,
+            to,
+            amount,
           },
           message: "Success",
         });

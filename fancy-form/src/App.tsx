@@ -12,13 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import SVG from "react-inlinesvg";
 import { fetchExchange } from "./apis";
-import { divide } from "./bignumber.utils";
-import {
-  iconMapper,
-  priceMapper,
-  prices,
-  updatedTimeMapper,
-} from "./constants";
+import { iconMapper, prices } from "./constants";
 
 type FieldType = {
   amount: number;
@@ -26,9 +20,19 @@ type FieldType = {
   to: string;
 };
 
+type ResponseData = {
+  exchangedAmount: string;
+  fromPerTo: string;
+  toPerFrom: string;
+  updatedTime: string;
+  from: string;
+  to: string;
+  amount: string;
+};
+
 function App() {
   const [form] = Form.useForm();
-  const [result, setResult] = useState<string>();
+  const [result, setResult] = useState<ResponseData>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const options = prices.map(({ currency, icon }) => {
@@ -47,15 +51,17 @@ function App() {
   const watchAmount = Form.useWatch("amount", form) || 0;
   const watchToCurrency = Form.useWatch("to", form);
 
+  const formatNumber = (strNumber: string) =>
+    parseFloat(strNumber).toLocaleString(undefined, {
+      maximumFractionDigits: 6,
+    });
+
   const onFinish: FormProps<FieldType>["onFinish"] = (formData) => {
     setIsSubmitting(true);
     fetchExchange(formData)
       .then((response) => {
         if (response) {
-          setResult(
-            (response as unknown as { data: { exchangedAmount: string } })?.data
-              ?.exchangedAmount
-          );
+          setResult((response as unknown as { data: ResponseData })?.data);
         }
       })
       .catch((error) => {
@@ -179,43 +185,29 @@ function App() {
         {result && (
           <>
             <div className="text-xs text-gray-500">{`*Last updated ${new Date(
-              updatedTimeMapper[watchFromCurrency]
+              result?.updatedTime
             )}`}</div>
             <div className="space-x-2 mb-2">
-              <span className="text-gray-500 text-xl">{`${parseFloat(
-                watchAmount
-              ).toLocaleString(undefined, {
-                maximumFractionDigits: 6,
-              })} ${watchFromCurrency} =`}</span>
+              <span className="text-gray-500 text-xl">{`${formatNumber(
+                result?.amount
+              )} ${result?.to} =`}</span>
               <span className="text-gray-700 text-2xl font-medium">
-                {parseFloat(result).toLocaleString(undefined, {
-                  maximumFractionDigits: 6,
-                })}
+                {formatNumber(result?.exchangedAmount)}
               </span>
-              <span className="text-gray-500 text-xl">{watchToCurrency}</span>
+              <span className="text-gray-500 text-xl">{result?.from}</span>
             </div>
             <div className="text-gray-500 text-sm">
               <div>
-                <span>{`1 ${watchFromCurrency} = `}</span>
-                <span>{`${parseFloat(
-                  divide(
-                    priceMapper[watchFromCurrency].toString(),
-                    priceMapper[watchToCurrency].toString()
-                  )
-                ).toLocaleString(undefined, {
-                  maximumFractionDigits: 6,
-                })} ${watchToCurrency}`}</span>
+                <span>{`1 ${result?.to} = `}</span>
+                <span>{`${formatNumber(result?.fromPerTo)} ${
+                  result?.from
+                }`}</span>
               </div>
               <div>
-                <span>{`1 ${watchToCurrency} = `}</span>
-                <span>{`${parseFloat(
-                  divide(
-                    priceMapper[watchToCurrency].toString(),
-                    priceMapper[watchFromCurrency].toString()
-                  )
-                ).toLocaleString(undefined, {
-                  maximumFractionDigits: 6,
-                })} ${watchFromCurrency}`}</span>
+                <span>{`1 ${result?.from} = `}</span>
+                <span>{`${formatNumber(result?.toPerFrom)} ${
+                  result?.to
+                }`}</span>
               </div>
             </div>
           </>
