@@ -81,16 +81,16 @@ function App() {
   }, [result, watchFromCurrency, watchAmount, watchToCurrency]);
 
   return (
-    <div className="w-[100vw] h-[100vh] overflow-hidden flex justify-center items-center bg-[#0e2d59] relative">
-      <div className="rounded-4xl w-[80%] bg-red shadow-2xl z-10 relative bg-white p-10">
-        <header className="absolute -top-36 text-center left-1/2 transform -translate-x-1/2">
-          <h1 className="text-5xl mb-5 font-medium text-white">
-            Token Converter
-          </h1>
-          <h2 className="text-white text-xl font-light">
-            Check tokens exchange rates
-          </h2>
-        </header>
+    <div className="w-[100vw] h-[100vh] relative overflow-hidden flex flex-col justify-center items-center bg-[#0e2d59]">
+      <header className="text-center mb-5">
+        <h1 className="text-3xl md:text-5xl mb-3 font-medium text-white">
+          Token Converter
+        </h1>
+        <h2 className="text-white text-xl font-light">
+          Check tokens exchange rates
+        </h2>
+      </header>
+      <div className="rounded-xl md:rounded-4xl w-[90%] md:w-[80%] bg-red shadow-2xl z-10 relative bg-white p-6 md:p-10">
         <Form onFinish={onFinish} layout="vertical" form={form}>
           <Row gutter={[8, 0]}>
             <Col xs={24} md={8}>
@@ -177,7 +177,7 @@ function App() {
         </Form>
 
         {result && (
-          <div className="h-[100px]">
+          <>
             <div className="text-xs text-gray-500">{`*Last updated ${new Date(
               updatedTimeMapper[watchFromCurrency]
             )}`}</div>
@@ -218,7 +218,7 @@ function App() {
                 })} ${watchFromCurrency}`}</span>
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
       <div className="absolute -left-50 -right-50 -bottom-[calc(100%*1.5)] h-[calc(100%*2)] bg-white rounded-tl-[calc(30%)] rounded-tr-[calc(30%)]"></div>
