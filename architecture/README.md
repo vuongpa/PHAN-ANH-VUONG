@@ -194,11 +194,11 @@ All API endpoints will return appropriate HTTP status codes and JSON error respo
 
 Here is flow chart:
 
-````mermaid
+```mermaid
 graph LR
     A["User Action on Website"] --> B(Dispatch API Call to Server);
     B --> C{API Gateway/Load Balancer};
-    C --> D[/api/v1/scores/update];
+    C --> D["/api/v1/scores/update"];
     D --> E{Authentication & Authorization};
     E -- Valid --> F["Score Processing & Update"];
     E -- Invalid --> G["Return 401 Unauthorized"];
@@ -213,5 +213,4 @@ graph LR
     O --> P["Return Top 10 Scoreboard"];
     O --> Q["Internal Server Error"];
     P --> M
-    ```
-````
+```
