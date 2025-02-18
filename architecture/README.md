@@ -192,21 +192,23 @@ All API endpoints will return appropriate HTTP status codes and JSON error respo
 - **A/B Testing:** Consider implementing A/B testing to experiment with different scoring algorithms or reward systems.
 - **User Activity Tracking:** Consider logging user activities that lead to score updates for auditing and fraud detection.
 
+```mermaid
 graph LR
-A[User Action on Website] --> B(Dispatch API Call to Server);
-B --> C{API Gateway/Load Balancer};
-C --> D[/api/v1/scores/update];
-D --> E{Authentication & Authorization};
-E -- Valid --> F[Score Processing & Update];
-E -- Invalid --> G[Return 401 Unauthorized];
-F --> H[Update User Score in DB];
-H --> I{Check if in Top 10};
-I -- Yes --> J[Update Scoreboard Cache];
-I -- No --> K[Return 200 OK];
-J --> L[Push Update to WebSocket Clients];
-L --> M[Website Scoreboard Update];
-K --> N[Return 200 OK];
-D --> O{Get /api/v1/scores/top10};
-O --> P[Return Top 10 Scoreboard]
-O --> Q[Internal Server Error]
-P --> M
+    A[User Action on Website] --> B(Dispatch API Call to Server);
+    B --> C{API Gateway/Load Balancer};
+    C --> D[/api/v1/scores/update];
+    D --> E{Authentication & Authorization};
+    E -- Valid --> F[Score Processing & Update];
+    E -- Invalid --> G[Return 401 Unauthorized];
+    F --> H[Update User Score in DB];
+    H --> I{Check if in Top 10};
+    I -- Yes --> J[Update Scoreboard Cache];
+    I -- No --> K[Return 200 OK];
+    J --> L[Push Update to WebSocket Clients];
+    L --> M[Website Scoreboard Update];
+    K --> N[Return 200 OK];
+    D --> O{Get /api/v1/scores/top10};
+    O --> P[Return Top 10 Scoreboard]
+    O --> Q[Internal Server Error]
+    P --> M
+```
