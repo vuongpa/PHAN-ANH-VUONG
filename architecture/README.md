@@ -192,8 +192,9 @@ All API endpoints will return appropriate HTTP status codes and JSON error respo
 - **A/B Testing:** Consider implementing A/B testing to experiment with different scoring algorithms or reward systems.
 - **User Activity Tracking:** Consider logging user activities that lead to score updates for auditing and fraud detection.
 
+Here is flow chart:
+
 ```mermaid
-graph LR
     A[User Action on Website] --> B(Dispatch API Call to Server);
     B --> C{API Gateway/Load Balancer};
     C --> D[/api/v1/scores/update];
