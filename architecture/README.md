@@ -194,22 +194,24 @@ All API endpoints will return appropriate HTTP status codes and JSON error respo
 
 Here is flow chart:
 
-```mermaid
-    A[User Action on Website] --> B(Dispatch API Call to Server);
+````mermaid
+graph LR
+    A["User Action on Website"] --> B(Dispatch API Call to Server);
     B --> C{API Gateway/Load Balancer};
     C --> D[/api/v1/scores/update];
     D --> E{Authentication & Authorization};
-    E -- Valid --> F[Score Processing & Update];
-    E -- Invalid --> G[Return 401 Unauthorized];
-    F --> H[Update User Score in DB];
-    H --> I{Check if in Top 10};
-    I -- Yes --> J[Update Scoreboard Cache];
-    I -- No --> K[Return 200 OK];
-    J --> L[Push Update to WebSocket Clients];
-    L --> M[Website Scoreboard Update];
-    K --> N[Return 200 OK];
+    E -- Valid --> F["Score Processing & Update"];
+    E -- Invalid --> G["Return 401 Unauthorized"];
+    F --> H["Update User Score in DB"];
+    H --> I{Check if in Top 10?};
+    I -- Yes --> J["Update Scoreboard Cache"];
+    I -- No --> K["Return 200 OK"];
+    J --> L["Push Update to WebSocket Clients"];
+    L --> M["Website Scoreboard Update"];
+    K --> N["Return 200 OK"];
     D --> O{Get /api/v1/scores/top10};
-    O --> P[Return Top 10 Scoreboard]
-    O --> Q[Internal Server Error]
+    O --> P["Return Top 10 Scoreboard"];
+    O --> Q["Internal Server Error"];
     P --> M
-```
+    ```
+````
